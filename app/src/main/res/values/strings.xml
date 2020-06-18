@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Forecast App</string>
+    <string name="loading">Loading…</string>
+
+
+    <string name="date">Date: %1$s</string>
+    <string name="avgTemp">Average Temperature: %1$d\u2103</string>
+    <string name="humidity">Humidity: %1$d%%</string>
+    <string name="pressure">Pressure: %1$d</string>
+    <string name="description">Description: %1$s</string>
+    <string name="search">Search City…</string>
+    <string name="clear_search_query">Clear</string>
+    <string name="require_more_character">Please enter more than %1$d characters</string>
+    <string name="error_city_not_found">City not found</string>
+
+
+    <!--    <string name="avgTemp">Average Temperature: %1$d \u2103</string>-->
+
+</resources>
