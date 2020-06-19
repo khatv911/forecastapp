@@ -26,7 +26,6 @@ val UiState<*>.succeeded
     get() = this is UiState.Success && data != null
 
 
-
 val UiState<*>.isLoading
     get() = this is UiState.Loading
 

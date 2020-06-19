@@ -4,18 +4,20 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.kay.forecast.CoroutineTestRule
 import com.kay.forecast.fakeForeCastWrapper
-import com.kay.forecast.ui.UiState
 import com.kay.forecast.repository.CityNotFound
 import com.kay.forecast.repository.InsufficientSearch
 import com.kay.forecast.repository.WeatherRepo
 import com.kay.forecast.ui.ForecastViewModel
-import io.mockk.*
+import com.kay.forecast.ui.UiState
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.slot
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 

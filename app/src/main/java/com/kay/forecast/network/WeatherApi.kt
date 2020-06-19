@@ -1,7 +1,6 @@
 package com.kay.forecast.network
 
 import com.kay.forecast.BASE_URL
-import com.kay.forecast.BuildConfig
 import com.kay.forecast.network.response.ForecastResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -2,8 +2,8 @@ package com.kay.forecast
 
 import com.kay.forecast.network.response.*
 import com.kay.forecast.persistence.db.Forecast
-import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.persistence.query.QueryCache.Companion.STALE_PERIOD
+import com.kay.forecast.repository.ForecastsWrapper
 
 fun fakeForeCastWrapper(): ForecastsWrapper =
     ForecastsWrapper(
@@ -21,14 +21,14 @@ fun fakeForeCastWrapper(): ForecastsWrapper =
 
 
 fun fakeSuccessApiCall(): ForecastResponse = ForecastResponse().apply {
-    city = City().apply { id=1L }
+    city = City().apply { id = 1L }
     weatherList = listOf(
         WeatherList().apply {
             dt = (System.currentTimeMillis() - STALE_PERIOD) / 1000 // millis to epoch
             temp = Temp().apply {
                 day = 30.0
             }
-            pressure  =1100
+            pressure = 1100
             humidity = 80
             weather = listOf(
                 Weather().apply {
@@ -42,7 +42,7 @@ fun fakeSuccessApiCall(): ForecastResponse = ForecastResponse().apply {
             temp = Temp().apply {
                 day = 30.0
             }
-            pressure  =1100
+            pressure = 1100
             humidity = 80
             weather = listOf(
                 Weather().apply {

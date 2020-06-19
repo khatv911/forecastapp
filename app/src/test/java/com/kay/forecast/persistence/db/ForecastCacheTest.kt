@@ -6,10 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kay.forecast.App
 import com.kay.forecast.fakeForeCastWrapper
 import org.junit.After
-import org.junit.Test
-
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 

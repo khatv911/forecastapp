@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.item_weather.view.*
 
 class ForecastAdapter :
     ListAdapter<Forecast, ForecastAdapter.ForecastViewHolder>(
-        Forecast.DIFF_CALLBACK) {
+        Forecast.DIFF_CALLBACK
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
         return ForecastViewHolder(
@@ -27,7 +28,7 @@ class ForecastAdapter :
 
     class ForecastViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(forecast: Forecast) = with(itemView) {
-            tvDate.text = resources.getString(R.string.date, forecast.date?.millisToDate() ?: "N/A")
+            tvDate.text = resources.getString(R.string.date, forecast.date.millisToDate())
             tvAvgTemp.text = resources.getString(R.string.avgTemp, forecast.avgTemp?.toInt())
             tvHumidity.text = resources.getString(R.string.humidity, forecast.humidity)
             tvPressure.text = resources.getString(R.string.pressure, forecast.pressure)

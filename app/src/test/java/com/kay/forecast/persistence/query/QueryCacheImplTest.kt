@@ -1,15 +1,11 @@
 package com.kay.forecast.persistence.query
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.kay.forecast.App
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.annotation.Config
 
 class QueryCacheImplTest {
 

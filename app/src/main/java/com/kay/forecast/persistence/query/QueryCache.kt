@@ -1,10 +1,7 @@
 package com.kay.forecast.persistence.query
 
 import com.google.gson.annotations.SerializedName
-import com.kay.forecast.persistence.query.QueryCache.CacheStatus.CITY_NOT_FOUND
-import com.kay.forecast.persistence.query.QueryCache.CacheStatus.EXPIRED_QUERY
-import com.kay.forecast.persistence.query.QueryCache.CacheStatus.QUERY_FOUND
-import com.kay.forecast.persistence.query.QueryCache.CacheStatus.QUERY_NOT_FOUND
+import com.kay.forecast.persistence.query.QueryCache.CacheStatus.*
 import com.kay.forecast.persistence.query.QueryCache.Companion.STALE_PERIOD
 import java.util.concurrent.ConcurrentHashMap
 

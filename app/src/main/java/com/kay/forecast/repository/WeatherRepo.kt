@@ -47,6 +47,7 @@ class WeatherRepoImpl(
             }
 
         } catch (e: Throwable) {
+            Timber.e(e)
             val customEx = filterNetworkException(e)
             if (customEx is CityNotFound) {
                 Timber.tag(TAG).e("q:$query City not found")
@@ -57,7 +58,7 @@ class WeatherRepoImpl(
     }
 
 
-    private suspend fun queryFromCache(queryInfo: QueryInfo) =
+    private fun queryFromCache(queryInfo: QueryInfo) =
         ForecastsWrapper(
             cacheDataSource.fetch(
                 queryInfo.cityId,
@@ -83,7 +84,7 @@ class WeatherRepoImpl(
                 )
             )
         }
-        val minDate = result.minBy { it.date ?: 0L }?.date
+        val minDate = result.minBy { it.date }?.date
         val queryInfo =
             QueryInfo(query, QueryCache.CacheStatus.QUERY_NOT_FOUND, cityId, minDate ?: 0L)
         return Pair(result, queryInfo)

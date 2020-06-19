@@ -1,12 +1,18 @@
 package com.kay.forecast.ui
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kay.forecast.APP_ID
 import com.kay.forecast.MIN_QUERY_LENGTH
 import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.repository.InsufficientSearch
 import com.kay.forecast.repository.WeatherRepo
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ForecastViewModel constructor(
     private val repo: WeatherRepo,

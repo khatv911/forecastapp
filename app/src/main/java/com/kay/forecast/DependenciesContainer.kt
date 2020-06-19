@@ -3,8 +3,8 @@ package com.kay.forecast
 import android.app.Application
 import androidx.room.Room
 import com.kay.forecast.network.WeatherApi
-import com.kay.forecast.persistence.db.AppDatabase
 import com.kay.forecast.persistence.CacheDataSource
+import com.kay.forecast.persistence.db.AppDatabase
 import com.kay.forecast.persistence.query.QueryCacheImpl
 import com.kay.forecast.persistence.query.QueryCachePersistImpl
 import com.kay.forecast.repository.WeatherRepo

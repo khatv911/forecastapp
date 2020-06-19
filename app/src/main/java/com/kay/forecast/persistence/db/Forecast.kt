@@ -6,7 +6,8 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "tbl_forecast",
-    primaryKeys = ["cityId", "date"])
+    primaryKeys = ["cityId", "date"]
+)
 data class Forecast(
 
     val cityId: Long = 0L,

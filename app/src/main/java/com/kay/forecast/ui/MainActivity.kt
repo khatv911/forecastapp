@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import androidx.activity.viewModels
-import androidx.core.content.getSystemService
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
@@ -19,8 +19,8 @@ import com.kay.forecast.App
 import com.kay.forecast.DEBOUNCE_DURATION
 import com.kay.forecast.MIN_QUERY_LENGTH
 import com.kay.forecast.R
-import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.repository.CityNotFound
+import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.repository.InsufficientSearch
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Job
@@ -29,9 +29,11 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private val vm: ForecastViewModel by viewModels { ForecastViewModelFactory(
-        (application as App).dependenciesContainer
-    ) }
+    private val vm: ForecastViewModel by viewModels {
+        ForecastViewModelFactory(
+            (application as App).dependenciesContainer
+        )
+    }
 
     private lateinit var adapter: ForecastAdapter
 
@@ -81,11 +83,13 @@ class MainActivity : AppCompatActivity() {
             uiState.isLoading -> showLoading()
             uiState.succeeded -> {
                 hideLoading()
-                adapter.submitList(uiState.successOr(
-                    ForecastsWrapper(
-                        emptyList()
-                    )
-                ).forecasts)
+                adapter.submitList(
+                    uiState.successOr(
+                        ForecastsWrapper(
+                            emptyList()
+                        )
+                    ).forecasts
+                )
 
             }
             else -> onError((uiState as UiState.Error).exception)

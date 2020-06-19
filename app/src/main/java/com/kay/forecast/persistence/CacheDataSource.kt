@@ -13,7 +13,7 @@ interface CacheDataSource {
         limit: Int = NUM_OF_FORECASTS
     ): List<Forecast>
 
-     fun save(forecasts: List<Forecast>)
+    fun save(forecasts: List<Forecast>)
 
     fun clearAll()
 
@@ -31,11 +31,11 @@ interface CacheDataSource {
                 }.take(limit)
             }
 
-            override  fun save(forecasts: List<Forecast>) {
+            override fun save(forecasts: List<Forecast>) {
                 mutableList.addAll(forecasts)
             }
 
-            override  fun clearAll() {
+            override fun clearAll() {
                 mutableList.clear()
             }
         }
