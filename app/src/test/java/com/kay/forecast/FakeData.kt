@@ -1,16 +1,23 @@
 package com.kay.forecast
 
 import com.kay.forecast.network.response.*
-import com.kay.forecast.persistence.entities.Forecast
-import com.kay.forecast.persistence.entities.ForecastsWrapper
+import com.kay.forecast.persistence.db.Forecast
+import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.persistence.query.QueryCache.Companion.STALE_PERIOD
-import com.kay.forecast.ui.ForecastAdapter
 
-fun fakeForeCastWrapper(): ForecastsWrapper = ForecastsWrapper(
-    listOf(
-        Forecast(1L, 1592460591136, 30.0, 1005, 80, "It's gonna rain")
+fun fakeForeCastWrapper(): ForecastsWrapper =
+    ForecastsWrapper(
+        listOf(
+            Forecast(
+                1L,
+                1592460591136,
+                30.0,
+                1005,
+                80,
+                "It's gonna rain"
+            )
+        )
     )
-)
 
 
 fun fakeSuccessApiCall(): ForecastResponse = ForecastResponse().apply {

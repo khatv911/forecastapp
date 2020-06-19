@@ -3,7 +3,7 @@ package com.kay.forecast.ui
 import androidx.lifecycle.*
 import com.kay.forecast.APP_ID
 import com.kay.forecast.MIN_QUERY_LENGTH
-import com.kay.forecast.persistence.entities.ForecastsWrapper
+import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.repository.InsufficientSearch
 import com.kay.forecast.repository.WeatherRepo
 import kotlinx.coroutines.*

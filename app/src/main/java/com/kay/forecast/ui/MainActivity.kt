@@ -19,7 +19,7 @@ import com.kay.forecast.App
 import com.kay.forecast.DEBOUNCE_DURATION
 import com.kay.forecast.MIN_QUERY_LENGTH
 import com.kay.forecast.R
-import com.kay.forecast.persistence.entities.ForecastsWrapper
+import com.kay.forecast.repository.ForecastsWrapper
 import com.kay.forecast.repository.CityNotFound
 import com.kay.forecast.repository.InsufficientSearch
 import kotlinx.android.synthetic.main.activity_main.*
@@ -81,7 +81,11 @@ class MainActivity : AppCompatActivity() {
             uiState.isLoading -> showLoading()
             uiState.succeeded -> {
                 hideLoading()
-                adapter.submitList(uiState.successOr(ForecastsWrapper(emptyList())).forecasts)
+                adapter.submitList(uiState.successOr(
+                    ForecastsWrapper(
+                        emptyList()
+                    )
+                ).forecasts)
 
             }
             else -> onError((uiState as UiState.Error).exception)

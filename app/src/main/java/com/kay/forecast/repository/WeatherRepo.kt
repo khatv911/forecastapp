@@ -3,9 +3,8 @@ package com.kay.forecast.repository
 import com.kay.forecast.NUM_OF_FORECASTS
 import com.kay.forecast.network.WeatherApi
 import com.kay.forecast.network.response.ForecastResponse
-import com.kay.forecast.persistence.db.DataSource
-import com.kay.forecast.persistence.entities.Forecast
-import com.kay.forecast.persistence.entities.ForecastsWrapper
+import com.kay.forecast.persistence.CacheDataSource
+import com.kay.forecast.persistence.db.Forecast
 import com.kay.forecast.persistence.query.QueryCache
 import com.kay.forecast.persistence.query.QueryInfo
 import retrofit2.HttpException
@@ -22,7 +21,7 @@ interface WeatherRepo {
 class WeatherRepoImpl(
     private val api: WeatherApi,
     private val queryCache: QueryCache,
-    private val diskDataSource: DataSource
+    private val cacheDataSource: CacheDataSource
 ) : WeatherRepo {
     override suspend fun getWeather(appId: String, query: String, count: Int): ForecastsWrapper {
         return try {
@@ -36,14 +35,14 @@ class WeatherRepoImpl(
                     Timber.tag(TAG).d("q:$query needs fresh search")
                     val response = api.getForecast(appId, query, count)
                     val (list, info) = convertNetworkResponse(query, response)
-                    diskDataSource.save(list)
+                    cacheDataSource.save(list)
                     val updatedInfo = info.copy(state = QueryCache.CacheStatus.QUERY_FOUND)
                     queryCache.put(updatedInfo)
-                    queryFromDisk(updatedInfo)
+                    queryFromCache(updatedInfo)
                 }
                 QueryCache.CacheStatus.QUERY_FOUND -> {
                     Timber.tag(TAG).d("q:$query found in cache")
-                    queryFromDisk(queryInfo)
+                    queryFromCache(queryInfo)
                 }
             }
 
@@ -58,12 +57,13 @@ class WeatherRepoImpl(
     }
 
 
-    private suspend fun queryFromDisk(queryInfo: QueryInfo) = ForecastsWrapper(
-        diskDataSource.fetch(
-            queryInfo.cityId,
-            queryInfo.minDate
+    private suspend fun queryFromCache(queryInfo: QueryInfo) =
+        ForecastsWrapper(
+            cacheDataSource.fetch(
+                queryInfo.cityId,
+                queryInfo.minDate
+            )
         )
-    )
 
     private fun convertNetworkResponse(
         query: String,
@@ -75,7 +75,7 @@ class WeatherRepoImpl(
             result.add(
                 Forecast(
                     cityId,
-                    it.dt?.times(1000), // epoch to millisecond
+                    it.dt?.times(1000) ?: 0L, // epoch to millisecond
                     it.temp?.day, //avg temp
                     it.pressure,
                     it.humidity,
@@ -94,21 +94,12 @@ class WeatherRepoImpl(
         when (e) {
             is HttpException -> {
                 when {
-                    e.code() == 401 -> {
-                        UnAuthorized()
-                    }
-                    e.code() == 404 -> {
-                        CityNotFound()
-                    }
-                    else -> {
-                        e
-                    }
+                    e.code() == 401 -> UnAuthorized()
+                    e.code() == 404 -> CityNotFound()
+                    else -> e
                 }
-
             }
-            else -> {
-                e
-            }
+            else -> e
         }
 
     companion object {

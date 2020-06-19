@@ -6,12 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kay.forecast.R
-import com.kay.forecast.persistence.entities.Forecast
+import com.kay.forecast.persistence.db.Forecast
 import com.kay.forecast.utils.millisToDate
 import kotlinx.android.synthetic.main.item_weather.view.*
 
 class ForecastAdapter :
-    ListAdapter<Forecast, ForecastAdapter.ForecastViewHolder>(Forecast.DIFF_CALLBACK) {
+    ListAdapter<Forecast, ForecastAdapter.ForecastViewHolder>(
+        Forecast.DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
         return ForecastViewHolder(

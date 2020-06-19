@@ -1,13 +1,17 @@
-package com.kay.forecast.persistence.entities
+package com.kay.forecast.persistence.db
 
 import androidx.recyclerview.widget.DiffUtil
+import androidx.room.Entity
 
 
+@Entity(
+    tableName = "tbl_forecast",
+    primaryKeys = ["cityId", "date"])
 data class Forecast(
 
-    val cityId: Long? = null,
+    val cityId: Long = 0L,
 
-    val date: Long? = null,
+    val date: Long = 0L,
 
     val avgTemp: Double? = null,
 
@@ -20,7 +24,7 @@ data class Forecast(
     companion object {
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Forecast>() {
             override fun areItemsTheSame(oldItem: Forecast, newItem: Forecast): Boolean {
-                return oldItem.cityId?.equals(newItem.cityId) ?: false
+                return oldItem.cityId == newItem.cityId
             }
 
             override fun areContentsTheSame(oldItem: Forecast, newItem: Forecast): Boolean {

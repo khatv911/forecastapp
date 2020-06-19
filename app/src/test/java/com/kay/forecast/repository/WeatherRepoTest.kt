@@ -4,7 +4,7 @@ import com.kay.forecast.APP_ID
 import com.kay.forecast.fakeForeCastWrapper
 import com.kay.forecast.fakeSuccessApiCall
 import com.kay.forecast.network.WeatherApi
-import com.kay.forecast.persistence.db.DataSource
+import com.kay.forecast.persistence.CacheDataSource
 import com.kay.forecast.persistence.query.QueryCache
 import com.kay.forecast.persistence.query.QueryInfo
 import io.mockk.*
@@ -30,7 +30,7 @@ class WeatherRepoTest {
     @MockK
     private lateinit var queryCache: QueryCache
 
-    private val dataSource = DataSource.inMem()
+    private val dataSource = CacheDataSource.inMem()
 
     @Before
     fun setup() {

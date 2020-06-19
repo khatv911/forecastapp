@@ -10,7 +10,7 @@ class ForecastViewModelFactory(private val dependenciesContainer: DependenciesCo
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(ForecastViewModel::class.java)) {
-            val repo = dependenciesContainer.getTilesApi()
+            val repo = dependenciesContainer.repo
             ForecastViewModel(repo, Dispatchers.IO) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
