@@ -3,7 +3,7 @@ package com.kay.forecast.repository
 import com.kay.forecast.NUM_OF_FORECASTS
 import com.kay.forecast.network.WeatherApi
 import com.kay.forecast.network.response.ForecastResponse
-import com.kay.forecast.persistence.db.DiskDataSource
+import com.kay.forecast.persistence.db.DataSource
 import com.kay.forecast.persistence.entities.Forecast
 import com.kay.forecast.persistence.entities.ForecastsWrapper
 import com.kay.forecast.persistence.query.QueryCache
@@ -17,24 +17,13 @@ interface WeatherRepo {
         query: String = "saigon",
         count: Int = NUM_OF_FORECASTS
     ): ForecastsWrapper
-
-    fun stop()
 }
 
 class WeatherRepoImpl(
     private val api: WeatherApi,
     private val queryCache: QueryCache,
-    private val diskDataSource: DiskDataSource = DiskDataSource.inMem()
+    private val diskDataSource: DataSource
 ) : WeatherRepo {
-
-    init {
-        queryCache.initialize()
-    }
-
-    override fun stop() {
-        queryCache.persist()
-    }
-
     override suspend fun getWeather(appId: String, query: String, count: Int): ForecastsWrapper {
         return try {
             val queryInfo = queryCache.get(query)

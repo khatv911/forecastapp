@@ -16,7 +16,6 @@ import org.robolectric.annotation.Config
 class QueryCacheImplTest {
 
 
-
     private lateinit var queryCache: QueryCache
 
     @MockK
@@ -27,7 +26,6 @@ class QueryCacheImplTest {
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
         queryCache = QueryCacheImpl(persistor)
-        queryCache.initialize()
 
     }
 
@@ -68,8 +66,6 @@ class QueryCacheImplTest {
         )
         queryCache.put(goodQuery)
         assertEquals(QueryCache.CacheStatus.QUERY_FOUND, queryCache.get("saigon").state)
-
-        queryCache.persist()
         verify { persistor.persist(any()) }
 
     }

@@ -34,27 +34,26 @@ class QueryCachePersistImplTest {
     @Test
     fun `what you persist is what you get`() {
         persistImpl.clearForTesting()
-        assertTrue(persistImpl.get().isEmpty())
-
-        val map = mapOf<String, QueryInfo>(
-            "sai" to QueryInfo(
-                "sai",
-                QueryCache.CacheStatus.CITY_NOT_FOUND,
-                0L,
-                0L
-            ),
-
-            "saigon" to QueryInfo(
-                "saigon",
-                QueryCache.CacheStatus.QUERY_FOUND,
-                1L,
-                System.currentTimeMillis() - 1000
-            )
+        assertTrue(persistImpl.getAll().isEmpty())
+        val info1 = QueryInfo(
+            "sai",
+            QueryCache.CacheStatus.CITY_NOT_FOUND,
+            0L,
+            0L
         )
+        persistImpl.persist(info1)
+        val info2 = QueryInfo(
+            "saigon",
+            QueryCache.CacheStatus.QUERY_FOUND,
+            1L,
+            System.currentTimeMillis() - 1000
+        )
+        persistImpl.persist(info2)
 
-        persistImpl.persist(map)
-        val retrivedMap = persistImpl.get()
-        assertTrue(persistImpl.get().size == 2)
+        val retrievedMap = persistImpl.getAll()
+        assertTrue(retrievedMap.size == 2)
+        assertEquals(retrievedMap["sai"], info1)
+        assertEquals(retrievedMap["saigon"], info2)
 
     }
 }

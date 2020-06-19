@@ -1,20 +1,19 @@
 package com.kay.forecast.persistence.query
 
-import androidx.collection.LruCache
 import com.google.gson.annotations.SerializedName
 import com.kay.forecast.persistence.query.QueryCache.CacheStatus.CITY_NOT_FOUND
 import com.kay.forecast.persistence.query.QueryCache.CacheStatus.EXPIRED_QUERY
 import com.kay.forecast.persistence.query.QueryCache.CacheStatus.QUERY_FOUND
 import com.kay.forecast.persistence.query.QueryCache.CacheStatus.QUERY_NOT_FOUND
 import com.kay.forecast.persistence.query.QueryCache.Companion.STALE_PERIOD
-import java.util.concurrent.Semaphore
+import java.util.concurrent.ConcurrentHashMap
 
 
 data class QueryInfo(
     @SerializedName("query")
     val query: String,
     @SerializedName("state")
-    val state: QueryCache.CacheStatus = QueryCache.CacheStatus.QUERY_NOT_FOUND,
+    val state: QueryCache.CacheStatus = QUERY_NOT_FOUND,
     @SerializedName("cityId")
     val cityId: Long = Long.MIN_VALUE,
     @SerializedName("minDate")
@@ -24,11 +23,6 @@ data class QueryInfo(
 
 interface QueryCache {
     /**
-     *
-     */
-    fun initialize()
-
-    /**
      * check if query is stored in cache
      */
     fun get(key: String): QueryInfo
@@ -36,12 +30,8 @@ interface QueryCache {
     /**
      * Put a query in cache
      */
-    fun put(value: QueryInfo)
+    fun put(info: QueryInfo)
 
-    /**
-     * Persist this cache to disk
-     */
-    fun persist()
 
     enum class CacheStatus {
         QUERY_NOT_FOUND, //fresh search
@@ -63,49 +53,36 @@ class QueryCacheImpl(
     private val stalePeriod: Long = STALE_PERIOD
 ) :
     QueryCache {
-    private val lruCache: LruCache<String, QueryInfo> = LruCache(50)
-    private val semaphore = Semaphore(1)
+    private val memCache: ConcurrentHashMap<String, QueryInfo> = ConcurrentHashMap()
 
-    override fun initialize() {
-        persistHelper.get().forEach { (t, u) -> lruCache.put(t, u) }
+    init {
+        persistHelper.getAll().forEach { (t, u) -> memCache.put(t, u) }
     }
+
 
     override fun get(key: String): QueryInfo {
-        try {
-            semaphore.acquire()
-            val queryInfo = lruCache[key]
-            return if (queryInfo == null) {
-                QueryInfo(
-                    key,
-                    state = QUERY_NOT_FOUND
+
+        val queryInfo = memCache[key]
+        return if (queryInfo == null) {
+            QueryInfo(
+                key,
+                state = QUERY_NOT_FOUND
+            )
+        } else {
+            when {
+                queryInfo.state == CITY_NOT_FOUND -> queryInfo
+                queryInfo.minDate + stalePeriod < System.currentTimeMillis() -> queryInfo.copy(
+                    state = EXPIRED_QUERY
                 )
-            } else {
-                when {
-                    queryInfo.state == CITY_NOT_FOUND -> queryInfo
-                    queryInfo.minDate + stalePeriod < System.currentTimeMillis() -> queryInfo.copy(
-                        state = EXPIRED_QUERY
-                    )
-                    else -> queryInfo.copy(state = QUERY_FOUND)
-                }
+                else -> queryInfo.copy(state = QUERY_FOUND)
             }
-        } finally {
-            semaphore.release()
         }
-
     }
 
-    override fun put(value: QueryInfo) {
-        try {
-            semaphore.acquire()
-            lruCache.put(value.query, value)
-        } finally {
-            semaphore.release()
-        }
-
+    override fun put(info: QueryInfo) {
+        memCache[info.query] = info
+        persistHelper.persist(info)
     }
 
-    override fun persist() {
-        persistHelper.persist(lruCache.snapshot())
-        lruCache.evictAll()
-    }
+
 }

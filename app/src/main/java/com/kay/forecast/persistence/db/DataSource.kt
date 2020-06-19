@@ -3,7 +3,7 @@ package com.kay.forecast.persistence.db
 import com.kay.forecast.NUM_OF_FORECASTS
 import com.kay.forecast.persistence.entities.Forecast
 
-interface DiskDataSource {
+interface DataSource {
     suspend fun fetch(
         cityId: Long,
         minDate: Long = 0L,
@@ -12,8 +12,10 @@ interface DiskDataSource {
 
     suspend fun save(forecasts: List<Forecast>)
 
+    suspend fun clearAll()
+
     companion object {
-        fun inMem(): DiskDataSource = object : DiskDataSource {
+        fun inMem(): DataSource = object : DataSource {
             private val mutableList = mutableListOf<Forecast>()
             override suspend fun fetch(cityId: Long, minDate: Long, limit: Int): List<Forecast> {
                 return mutableList.filter {
@@ -24,6 +26,10 @@ interface DiskDataSource {
 
             override suspend fun save(forecasts: List<Forecast>) {
                 mutableList.addAll(forecasts)
+            }
+
+            override suspend fun clearAll() {
+                mutableList.clear()
             }
         }
     }

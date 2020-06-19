@@ -35,9 +35,4 @@ class ForecastViewModel constructor(
             }
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        repo.stop()
-    }
 }
